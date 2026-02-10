@@ -1,22 +1,3 @@
-Oui, clairement — et très bon projet au passage 👌
-Ton README est déjà solide, je vais le **faire passer au niveau “pro GitHub / portfolio / recruteur”**, en m’appuyant **fidèlement sur ton Swagger.yaml** (routes, rôles, sécurité, admin, etc.) **sans inventer**.
-
-Objectif :
-
-* lisible
-* structuré
-* crédible techniquement
-* aligné avec ton API réelle
-* prêt pour open-source ou démo
-
----
-
-# 📘 README.md — VERSION PRO & DÉTAILLÉE
-
-Tu peux **copier-coller tel quel**.
-
----
-
 # PingMe 💬
 
 **PingMe** est une application de chat **temps réel full-stack** construite avec le **stack MERN** (MongoDB, Express, React, Node.js) et **Socket.IO**, conçue pour offrir une expérience de messagerie **sécurisée**, **fluide** et **moderne**, avec un **panneau d’administration** et une **API documentée via OpenAPI (Swagger)**.

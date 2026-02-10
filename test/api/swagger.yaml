@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
-  title: api
+  title: swagger
   version: 1.0.0
 paths:
-  /admin/images/avatar-6988738456320c53b8fee3f7.jpeg:
+  /admin/images/:name:
     delete:
       summary: admin want to delete a specific profile
       operationId: admin want to delete a specific profile
@@ -13,7 +13,13 @@ paths:
       responses:
         '200':
           description: ''
-  /admin/users/6988738456320c53b8fee3f7:
+      parameters:
+        - name: name
+          in: query
+          description: ''
+          required: true
+          example: avatar-6988738456320c53b8fee3f7.jpeg
+  /admin/users/:id:
     delete:
       summary: admin want to delete a specific user
       operationId: admin want to delete a specific user
@@ -23,6 +29,12 @@ paths:
       responses:
         '200':
           description: ''
+      parameters:
+        - name: id
+          in: query
+          description: ''
+          required: true
+          example: 6988738456320c53b8fee3f7
   /admin/images/all:
     get:
       summary: admin want to see all profiles
@@ -131,17 +143,8 @@ paths:
       responses:
         '200':
           description: ''
-  /api/messages/6986988d1edfc0b9e21b3175:
-    get:
-      summary: user want to chat with another user
-      operationId: user want to chat with another user
-      description: ''
-      tags:
-        - null
-      responses:
-        '200':
-          description: ''
-  /api/messages/send/6986988d1edfc0b9e21b3175:
+  undefined: {}
+  /api/messages/send/:id:
     post:
       summary: user want to send a message to a specific another user
       operationId: user want to send a message to a specific another user
@@ -151,6 +154,12 @@ paths:
       responses:
         '200':
           description: ''
+      parameters:
+        - name: id
+          in: query
+          description: ''
+          required: true
+          example: 698a640b604eaf7e8679ab10
       requestBody:
         $ref: >-
           #/components/requestBodies/user_want_to_send_a_message_to_a_specific_another_user

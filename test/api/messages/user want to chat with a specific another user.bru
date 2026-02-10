@@ -1,13 +1,13 @@
 meta {
-  name: user want to chat with another user
+  name: user want to chat with a specific another user
   type: http
-  seq: 1
+  seq: 2
 }
 
 get {
   url: http://localhost:5001/api/messages/:id
-  body: formUrlEncoded
-  auth: inherit
+  body: none
+  auth: none
 }
 
 params:path {

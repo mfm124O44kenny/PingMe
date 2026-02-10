@@ -5,9 +5,13 @@ meta {
 }
 
 delete {
-  url: http://localhost:5001/admin/users/6988738456320c53b8fee3f7
+  url: http://localhost:5001/admin/users/:id
   body: none
   auth: inherit
+}
+
+params:path {
+  id: 6988738456320c53b8fee3f7
 }
 
 settings {

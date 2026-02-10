@@ -1,35 +1,57 @@
 openapi: 3.0.0
 info:
-  title: api
+  title: swagger
   version: 1.0.0
 paths:
-  /admin/images/avatar-6988738456320c53b8fee3f7.jpeg:
+  /:
+    get:
+      summary: confirm server starting
+      operationId: confirm server starting
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+  /admin/images/:name:
     delete:
       summary: admin want to delete a specific profile
       operationId: admin want to delete a specific profile
       description: ''
       tags:
-        - null
+        - admin panel
       responses:
         '200':
           description: ''
-  /admin/users/6988738456320c53b8fee3f7:
+      parameters:
+        - name: name
+          in: query
+          description: ''
+          required: true
+          example: avatar-6988738456320c53b8fee3f7.jpeg
+  /admin/users/:id:
     delete:
       summary: admin want to delete a specific user
       operationId: admin want to delete a specific user
       description: ''
       tags:
-        - null
+        - admin panel
       responses:
         '200':
           description: ''
+      parameters:
+        - name: id
+          in: query
+          description: ''
+          required: true
+          example: 6988738456320c53b8fee3f7
   /admin/images/all:
     get:
       summary: admin want to see all profiles
       operationId: admin want to see all profiles
       description: ''
       tags:
-        - null
+        - admin panel
       responses:
         '200':
           description: ''
@@ -39,7 +61,7 @@ paths:
       operationId: admin want to see all users
       description: ''
       tags:
-        - null
+        - admin panel
       responses:
         '200':
           description: ''
@@ -49,7 +71,7 @@ paths:
       operationId: go to admin panel
       description: ''
       tags:
-        - null
+        - admin panel
       responses:
         '200':
           description: ''
@@ -59,7 +81,7 @@ paths:
       operationId: someone want to login as admin
       description: ''
       tags:
-        - null
+        - admin panel
       responses:
         '200':
           description: ''
@@ -71,7 +93,7 @@ paths:
       operationId: non-user want to sign up
       description: ''
       tags:
-        - null
+        - authentification
       responses:
         '200':
           description: ''
@@ -83,7 +105,7 @@ paths:
       operationId: user want to login
       description: ''
       tags:
-        - null
+        - authentification
       responses:
         '200':
           description: ''
@@ -95,7 +117,7 @@ paths:
       operationId: user want to logout
       description: ''
       tags:
-        - null
+        - authentification
       responses:
         '200':
           description: ''
@@ -105,7 +127,7 @@ paths:
       operationId: user want to update profile
       description: ''
       tags:
-        - null
+        - authentification
       responses:
         '200':
           description: ''
@@ -117,7 +139,7 @@ paths:
       operationId: verify if request come from user, not a non-user
       description: ''
       tags:
-        - null
+        - authentification
       responses:
         '200':
           description: ''
@@ -127,45 +149,49 @@ paths:
       operationId: user see all users in sidebar
       description: ''
       tags:
-        - null
+        - messages
       responses:
         '200':
           description: ''
-  /api/messages/6986988d1edfc0b9e21b3175:
-    get:
-      summary: user want to chat with another user
-      operationId: user want to chat with another user
-      description: ''
-      tags:
-        - null
-      responses:
-        '200':
-          description: ''
-  /api/messages/send/6986988d1edfc0b9e21b3175:
+  /api/messages/send/:id:
     post:
       summary: user want to send a message to a specific another user
       operationId: user want to send a message to a specific another user
       description: ''
       tags:
-        - null
+        - messages
       responses:
         '200':
           description: ''
+      parameters:
+        - name: id
+          in: query
+          description: ''
+          required: true
+          example: 698a640b604eaf7e8679ab10
       requestBody:
         $ref: >-
           #/components/requestBodies/user_want_to_send_a_message_to_a_specific_another_user
-  /:
+  /api/messages/:id:
     get:
-      summary: confirm server starting
-      operationId: confirm server starting
+      summary: user want to chat with a specific another user
+      operationId: user want to chat with a specific another user
       description: ''
       tags:
-        - null
+        - messages
       responses:
         '200':
           description: ''
+      parameters:
+        - name: id
+          in: query
+          description: ''
+          required: true
+          example: 698a640b604eaf7e8679ab10
 servers:
   - url: http://localhost:5001
+  - url: http://127.0.0.1:5001
+  - url: http://192.168.43.98:5001
 components:
   schemas:
     someone_want_to_login_as_admin:

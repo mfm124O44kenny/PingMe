@@ -5,9 +5,13 @@ meta {
 }
 
 delete {
-  url: http://localhost:5001/admin/images/avatar-6988738456320c53b8fee3f7.jpeg
+  url: http://localhost:5001/admin/images/:name
   body: none
   auth: inherit
+}
+
+params:path {
+  name: avatar-6988738456320c53b8fee3f7.jpeg
 }
 
 settings {
