@@ -1,0 +1,243 @@
+openapi: 3.0.0
+info:
+  title: api
+  version: 1.0.0
+paths:
+  /admin/images/avatar-6988738456320c53b8fee3f7.jpeg:
+    delete:
+      summary: admin want to delete a specific profile
+      operationId: admin want to delete a specific profile
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /admin/users/6988738456320c53b8fee3f7:
+    delete:
+      summary: admin want to delete a specific user
+      operationId: admin want to delete a specific user
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /admin/images/all:
+    get:
+      summary: admin want to see all profiles
+      operationId: admin want to see all profiles
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /admin/users:
+    get:
+      summary: admin want to see all users
+      operationId: admin want to see all users
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /admin:
+    get:
+      summary: go to admin panel
+      operationId: go to admin panel
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /admin/:
+    post:
+      summary: someone want to login as admin
+      operationId: someone want to login as admin
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/someone_want_to_login_as_admin'
+  /api/auth/signup:
+    post:
+      summary: non-user want to sign up
+      operationId: non-user want to sign up
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/non-user_want_to_sign_up'
+  /api/auth/login:
+    post:
+      summary: user want to login
+      operationId: user want to login
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/user_want_to_login'
+  /api/auth/logout:
+    post:
+      summary: user want to logout
+      operationId: user want to logout
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /api/auth/update-profile:
+    put:
+      summary: user want to update profile
+      operationId: user want to update profile
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/user_want_to_update_profile'
+  /api/auth/check:
+    get:
+      summary: verify if request come from user, not a non-user
+      operationId: verify if request come from user, not a non-user
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /api/messages/users:
+    get:
+      summary: user see all users in sidebar
+      operationId: user see all users in sidebar
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /api/messages/6986988d1edfc0b9e21b3175:
+    get:
+      summary: user want to chat with another user
+      operationId: user want to chat with another user
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+  /api/messages/send/6986988d1edfc0b9e21b3175:
+    post:
+      summary: user want to send a message to a specific another user
+      operationId: user want to send a message to a specific another user
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: >-
+          #/components/requestBodies/user_want_to_send_a_message_to_a_specific_another_user
+  /:
+    get:
+      summary: confirm server starting
+      operationId: confirm server starting
+      description: ''
+      tags:
+        - null
+      responses:
+        '200':
+          description: ''
+servers:
+  - url: http://localhost:5001
+components:
+  schemas:
+    someone_want_to_login_as_admin:
+      type: object
+      properties:
+        name:
+          type: string
+        secret:
+          type: string
+    non-user_want_to_sign_up:
+      type: object
+      properties:
+        email:
+          type: string
+        fullName:
+          type: string
+        password:
+          type: string
+    user_want_to_login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    user_want_to_update_profile:
+      type: object
+      properties:
+        profilePic:
+          type: string
+    user_want_to_send_a_message_to_a_specific_another_user:
+      type: object
+      properties:
+        text:
+          type: string
+        image:
+          type: string
+  requestBodies:
+    someone_want_to_login_as_admin:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/someone_want_to_login_as_admin'
+      description: ''
+      required: true
+    non-user_want_to_sign_up:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/non-user_want_to_sign_up'
+      description: ''
+      required: true
+    user_want_to_login:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/user_want_to_login'
+      description: ''
+      required: true
+    user_want_to_update_profile:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/user_want_to_update_profile'
+      description: ''
+      required: true
+    user_want_to_send_a_message_to_a_specific_another_user:
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              #/components/schemas/user_want_to_send_a_message_to_a_specific_another_user
+      description: ''
+      required: true
+  securitySchemes: {}

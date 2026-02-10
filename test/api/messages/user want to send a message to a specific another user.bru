@@ -1,0 +1,27 @@
+meta {
+  name: user want to send a message to a specific another user
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5001/api/messages/send/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 698a640b604eaf7e8679ab10
+}
+
+body:json {
+  {
+    "text": "😪 Je ne s'aurais comment t'expliquer frérot !",
+    "image": ""
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

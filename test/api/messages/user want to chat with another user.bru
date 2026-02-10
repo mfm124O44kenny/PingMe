@@ -1,0 +1,20 @@
+meta {
+  name: user want to chat with another user
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:5001/api/messages/:id
+  body: formUrlEncoded
+  auth: inherit
+}
+
+params:path {
+  id: 698a640b604eaf7e8679ab10
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

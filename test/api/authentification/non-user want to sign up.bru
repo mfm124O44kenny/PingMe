@@ -1,0 +1,24 @@
+meta {
+  name: non-user want to sign up
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5001/api/auth/signup
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "Peter@gmail.com",
+    "fullName": "Peter Rob",
+    "password": "12345678"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

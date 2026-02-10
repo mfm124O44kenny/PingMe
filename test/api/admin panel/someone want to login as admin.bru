@@ -1,0 +1,23 @@
+meta {
+  name: someone want to login as admin
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5001/admin/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "kenny fotso",
+    "secret": "kennyfotso2007"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

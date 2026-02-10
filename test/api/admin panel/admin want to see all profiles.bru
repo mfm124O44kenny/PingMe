@@ -1,0 +1,16 @@
+meta {
+  name: admin want to see all profiles
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:5001/admin/images/all
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
