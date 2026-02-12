@@ -68,5 +68,6 @@ app.get("/", (req, res) => {
 
   httpServer.listen(PORT, ip, () => {
     console.log(`✅ Lien de connection serveur [http://${ip}:${PORT}]`);
+    console.log("JWT_SECRET:", process.env.JWT_SECRET); // juste pour tester
   }); // serveur en écoute sur un PORT d'une IP spécifique
 })();
