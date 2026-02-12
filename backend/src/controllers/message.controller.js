@@ -2,6 +2,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import cloudinary from '../config/cloudinary.js';
 
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
@@ -56,33 +57,20 @@ export const sendMessage = async (req, res) => {
       const { text, image } = req.body;
       let imageUrl = null;
   
-      if (image && image.startsWith("data:image")) {
-        const matches = image.match(/^data:(image\/\w+);base64,(.+)$/);
-  
-        if (!matches) {
-          console.log("⛔ Format d'image invalide [Ne peut être envoyer avec son message]");
-          return res.status(400).json({ error: "Invalid image format" });
-        }
-  
-        const ext = matches[1].split("/")[1];
-        const base64Data = matches[2];
-        const buffer = Buffer.from(base64Data, "base64");
-  
-        // créer le dossier si besoin
-        const uploadDir = path.join(__dirname, "../../../frontend/public/uploads/messages/");
-        await fs.mkdir(uploadDir, { recursive: true });
+ if (image && image.startsWith("data:image")) {
+  const matches = image.match(/^data:(image\/\w+);base64,(.+)$/);
+  if (!matches) return res.status(400).json({ error: "Invalid image format" });
 
-        const fileName = `msg-${Date.now()}-${senderId}.${ext}`;
-        const filePath = path.join(uploadDir, fileName);
- 
-        // écriture du fichier (PROMISE)
-        await fs.writeFile(filePath, buffer);
-  
-        console.log("✅ Image du message [" + text + "], de l'user [" + senderId + "] enregistrée !");
-  
-        imageUrl = `/public/uploads/messages/${fileName}`;
-      }else { console.log("✅ Message [" + text + "], de l'user [" + senderId + "] envoyé !"); }
-  
+  const base64Data = matches[2];
+
+  const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${base64Data}`, {
+    folder: `messages/${senderId}`,
+    public_id: `msg-${Date.now()}`,
+  });
+
+  imageUrl = result.secure_url;
+}
+
       //sauvegarde dans la collection messages
       const newMessage = await Message.create({
         senderId,

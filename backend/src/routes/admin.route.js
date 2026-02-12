@@ -2,6 +2,7 @@
 import express from "express";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import cloudinary from '../config/cloudinary.js';
 
 import fs from "fs/promises";
 import User from "../models/user.model.js";
@@ -55,20 +56,42 @@ router.delete("/users/:id", async (req, res) => {
 
 /*-------- Privilèges ADMIN sur les Images --------*/
 router.get("/images/all", async (req, res) => {
-  const imageFolder = join(__dirname, "../../../frontend/public/uploads/profile/");
-  const files = await fs.readdir(imageFolder);
-  
-  // filtrer seulement les images
-  const images = files
-  .filter(f => /\.(jpe?g|png|gif|webp)$/i.test(f)); 
-  console.log("✅ Recherce de tous les Images [privilège admin]", images);
-  res.json(images);
+  try {
+    // récupérer toutes les images dans le dossier "users" (Cloudinary)
+    const result = await cloudinary.api.resources({
+      type: "upload",
+      prefix: "users/", // même dossier que lors de l'upload
+      max_results: 100, // tu peux ajuster
+    });
+
+    // renvoyer seulement les URLs et le public_id
+    const images = result.resources.map(img => ({
+      url: img.secure_url,
+      public_id: img.public_id
+    }));
+
+    console.log("✅ Recherche de toutes les images Cloudinary [admin]", images);
+    res.json(images);
+
+  } catch (error) {
+    console.log("⛔ Erreur lors de la récupération des images Cloudinary", error);
+    res.status(500).json({ message: "Cannot fetch images" });
+  }
 });
 
-router.delete("/images/:name", async (req, res) => {
-  await fs.unlink(join(__dirname, "../../../frontend/public/uploads/profile/", req.params.name));
-  console.log("✅ Suppression d'une Image [privilège admin]", req.params.name);
-  res.json({ success: true });
+router.delete("/images/:public_id", async (req, res) => {
+  try {
+    const { public_id } = req.params;
+
+    await cloudinary.uploader.destroy(public_id);
+    console.log("✅ Suppression de l'image Cloudinary [admin]", public_id);
+    res.json({ success: true });
+
+  } catch (error) {
+    console.log("⛔ Erreur lors de la suppression Cloudinary", error);
+    res.status(500).json({ message: "Cannot delete image" });
+  }
 });
+
 
 export default router;

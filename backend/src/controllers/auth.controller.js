@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from "url";
+import cloudinary from '../config/cloudinary.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -101,50 +102,44 @@ export const logout = async (req, res) => {
 
 /*------------ Mettre à jour son profile ------------*/
 export const updateProfile = async (req, res) => {
-    try {
-      const { profilePic } = req.body;
-      const userId = req.user._id;
-  
-      if (!profilePic) {
-        return res.status(400).json({ message: "Profile picture is required" });
-      }
-  
-      // vérifier que c’est bien un base64 image
-      const matches = profilePic.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
-      if (!matches) {
-        return res.status(400).json({ message: "Invalid image format" });
-      }
-  
-      const extension = matches[1];        // png, jpeg, webp...
-      const base64Data = matches[2];       // la vraie donnée
-      const buffer = Buffer.from(base64Data, "base64");
-  
-      // créer le dossier si besoin
-      const imagesDir = path.join(__dirname, "../../../frontend/public/uploads/profile/");
-      await fs.mkdir(imagesDir, { recursive: true });
-  
-      // nom de fichier safe
-      const fileName = `avatar-${userId}.${extension}`;
-      const filePath = path.join(imagesDir, fileName);
-  
-      // écriture du fichier (PROMISE)
-      await fs.writeFile(filePath, buffer);
-  
-      // update DB
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { profilePic: `/public/uploads/profile/${fileName}` },
-        { new: true }
-      ).select("-password");
+  try {
+    const { profilePic } = req.body;
+    const userId = req.user._id;
 
-      console.log("✅ L'user [" + userId + "] à mis à jour son profile !");
-      res.status(200).json(updatedUser);
-  
-    } catch (error) {
-      console.log("⛔ L'user [" + userId + "] n'as pas pu mettre à jour son profile : ", error);
-      res.status(500).json({ message: "Image upload failed" });
+    if (!profilePic) {
+      return res.status(400).json({ message: "Profile picture is required" });
     }
-  };
+
+    // Vérifier le base64
+    const matches = profilePic.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+    if (!matches) {
+      return res.status(400).json({ message: "Invalid image format" });
+    }
+
+    const base64Data = matches[2];
+
+    // Upload vers Cloudinary
+    const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${base64Data}`, {
+      folder: `users/${userId}`,
+      public_id: `avatar`,
+      overwrite: true,
+    });
+
+    // Update DB
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: result.secure_url },
+      { new: true }
+    ).select("-password");
+
+    console.log(`✅ L'user [${userId}] a mis à jour son profile sur Cloudinary !`);
+    res.status(200).json(updatedUser);
+
+  } catch (error) {
+    console.log(`⛔ L'user [${req.user._id}] n'a pas pu mettre à jour son profile : `, error);
+    res.status(500).json({ message: "Image upload failed" });
+  }
+};
   
 /*------------ Vérifier si c'est bien un utilisateur qui envoie une requête ------------*/
 export const checkAuth =  (req, res) => {
