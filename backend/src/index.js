@@ -28,6 +28,14 @@ const PORT = process.env.PORT || 5001; // au cas où !
 const HOST = process.env.HOST;
 const swaggerDocument = YAML.load("./api.yaml");
 
+// Servir le build Vite (frontend/dist)
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+// Rediriger toutes les routes vers index.html pour le SPA
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /* ===============================
