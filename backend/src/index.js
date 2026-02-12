@@ -64,7 +64,7 @@ app.get("/", (req, res) => {
 
 (async () => {
   const ip = "0.0.0.0"; //await detectActiveIP();
-  await writeEnvFile({ host: ip, port: PORT }); // écriture dans le fichier .env
+  //await writeEnvFile({ host: ip, port: PORT }); // écriture dans le fichier .env, seulement en dev mode
 
   httpServer.listen(PORT, ip, () => {
     console.log(`✅ Lien de connection serveur [http://${ip}:${PORT}]`);
