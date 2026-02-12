@@ -46,31 +46,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      
-      // On les vérifie les origines autorisées
-      if (!origin) return callback(null, true);
-
-      const allowed = [
-        "http://localhost:5173",  // Vite dev server
-        "http://127.0.0.1:5173",
-        // Et on Ajoute des domaines si besoin
-      ];
-
-      try {
-        const url = new URL(origin);
-        if (
-          origin.match(/^http:\/\/192\.168\.\d+\.\d+:5173$/) ||
-          allowed.includes(origin) ||
-          allowed.includes(`${url.protocol}//${url.hostname}`) ||
-          allowed.includes(`${url.protocol}//${url.hostname}:${url.port}`)
-        ) {
-          return callback(null, true);
-        }
-      } catch {}
-
-      callback(null, false); // Retourne false au lieu de lancer une erreur
-    },
+    origin: "https://precious-donut-283306.netlify.app",
     credentials: true,
   })
 );
