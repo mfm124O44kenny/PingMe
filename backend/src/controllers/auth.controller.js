@@ -37,9 +37,9 @@ export const signup = async (req, res) => {
 
         if(newUser){
             console.log("✅ Nouveau utilisateur [" + fullName + "] !");
-            // generate jwt token
+            await newUser.save(); // d'abord sauvegarder
+            // générer token après sauvegarde
             generateToken(newUser._id, res);
-            await newUser.save();
             return res.status(201).json({
                 message: 'User created !',
                 _id: newUser._id,

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+/*import jwt from 'jsonwebtoken';
 
 export const generateToken = (userId, res) => {
     const token = jwt.sign({userId}, process.env.JWT_SECRET, 
@@ -17,3 +17,21 @@ export const generateToken = (userId, res) => {
     return token;
 
 }
+*/
+
+import jwt from 'jsonwebtoken';
+
+export const generateToken = (userId, res) => {
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+        expiresIn: '7d'
+    });
+
+    res.cookie('jwt', token, {
+        httpOnly: true,          // protège le cookie côté client
+        secure: true,            // HTTPS obligatoire
+        sameSite: 'none',        // permet cross-site (Render → Netlify)
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
+    });
+
+    return token;
+};
