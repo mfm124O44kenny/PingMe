@@ -57,41 +57,58 @@ router.delete("/users/:id", async (req, res) => {
 /*-------- Privilèges ADMIN sur les Images --------*/
 router.get("/images/all", async (req, res) => {
   try {
-    // récupérer toutes les images dans le dossier "users" (Cloudinary)
-    const result = await cloudinary.api.resources({
-      type: "upload",
-      prefix: "profile", // même dossier que lors de l'upload
-      max_results: 100, // tu peux ajuster
-    });
+    // Récupérer tous les utilisateurs avec leur nom et URL de profil
+    const users = await User.find().select("name profilePic");
 
-    // renvoyer seulement les URLs et le public_id
-    const images = result.resources.map(img => ({
-      url: img.secure_url,
-      public_id: img.public_id
-    }));
+    // Filtrer uniquement ceux qui ont une image
+    const images = users
+      .filter(u => u.profileImageUrl)
+      .map(u => ({
+        name: u.name,
+        url: u.profileImageUrl
+      }));
 
-    console.log("✅ Recherche de toutes les images Cloudinary [admin]", images);
+    console.log("✅ Toutes les images des utilisateurs depuis MongoDB [admin]", images);
     res.json(images);
 
   } catch (error) {
-    console.log("⛔ Erreur lors de la récupération des images Cloudinary", error);
+    console.log("⛔ Erreur lors de la récupération des images depuis MongoDB", error);
     res.status(500).json({ message: "Cannot fetch images" });
   }
 });
 
-router.delete("/images/:public_id", async (req, res) => {
+router.delete("/images/:userId", async (req, res) => {
   try {
-    const { public_id } = req.params;
+    const { userId } = req.params;
 
-    await cloudinary.uploader.destroy(public_id);
-    console.log("✅ Suppression de l'image Cloudinary [admin]", public_id);
-    res.json({ success: true });
+    // Récupérer l'utilisateur pour avoir l'URL Cloudinary
+    const user = await User.findById(userId);
+    if (!user || !user.profileImageUrl) {
+      return res.status(404).json({ message: "Utilisateur ou image non trouvée" });
+    }
+
+    // Extraire le public_id depuis l'URL Cloudinary
+    // Exemple URL : https://res.cloudinary.com/demo/image/upload/v1234567890/users/abc123.jpg
+    const urlParts = user.profileImageUrl.split("/");
+    const publicIdWithExt = urlParts.slice(-1)[0]; // 'abc123.jpg'
+    const publicId = "users/" + publicIdWithExt.split(".")[0]; // 'users/abc123'
+
+    // Supprimer l'image sur Cloudinary
+    await cloudinary.uploader.destroy(publicId);
+
+    // Supprimer la référence dans MongoDB
+    user.profileImageUrl = null;
+    await user.save();
+
+    console.log(`✅ Image supprimée pour l'utilisateur [${user.name}]`);
+    res.json({ success: true, message: "Image supprimée de Cloudinary et MongoDB" });
 
   } catch (error) {
-    console.log("⛔ Erreur lors de la suppression Cloudinary", error);
+    console.log("⛔ Erreur lors de la suppression de l'image", error);
     res.status(500).json({ message: "Cannot delete image" });
   }
 });
+
 
 
 export default router;
