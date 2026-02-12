@@ -2,162 +2,169 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>PingMe</title>
+  <title>PingMe Admin</title>
   <link rel="shortcut icon" href="./meetme.png" type="image/x-icon">
+  <style>
+    body {
+      font-family: Sitka Small;
+      background-color: #121212;
+      color: grey;
+      padding: 20px 40px;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .card {
+      cursor: pointer;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      width: 200px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .card button {
+      margin-top: 8px;
+      padding: 6px 10px;
+      background-color: #ffb74d;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+      transition: background 0.2s;
+    }
+
+    .card button:hover {
+      background-color: #ffa726;
+    }
+
+    .card .details {
+      font-size: 14px;
+      margin-top: 8px;
+      color: #ccc;
+      word-break: break-all;
+    }
+
+    h2 {
+      color: #ffb74d;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
-<style>
-  body {
-    font-family: Sitka Small;
-    background-color: #121212;
-    color: grey;
-    padding-left: 40px;
-  }
-  
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .card {
-    cursor: pointer;
-    background: #1e1e1e;
-    padding: 20px;
-    border-radius: 12px;
-    width: 200px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-  }
-  
-  .card img {
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .card button {
-    margin-top: 8%;
-    padding: 6px 10px;
-    background-color: #ffb74d;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    color: #000;
-    transition: background 0.2s;
-  }
-  
-  .card button:hover {
-    background-color: #ffa726;
-  }
-  
-  .card .details {
-    font-size: 14px;
-    margin-top: 8px;
-    color: #ccc;
-  }
-
-  #images {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    max-height: 600px;
-  }
-  
-</style>
 <body>
-    <br><br>
-  <main>
-    <section id="users-section">
-      Utilisateurs
-      <div id="users" class="card-container"></div>
-    </section>
+  <h2>Utilisateurs</h2>
+  <div id="users" class="card-container"></div>
 
-    <section id="images-section"><br>
-      Profiles
-      <div id="images" class="card-container"></div>
-    </section>
-  </main>
+  <h2>Profiles</h2>
+  <div id="images" class="card-container"></div>
 
   <script>
     // ================== USERS ==================
-async function fetchUsers() {
-    const res = await fetch("/admin/users");
-    const users = await res.json();
-  
-    const usersContainer = document.getElementById("users");
-    usersContainer.innerHTML = "";
-  
-    users.forEach(user => {
-      const card = document.createElement("div");
-      card.className = "card";
-  
-      card.innerHTML = `
-        <b style="font-family:'Sitka Small';">${user.fullName}</b>
-        <div class="details">${user._id}</div>
-        <div class="details">${user.email}</div>
-        <button onclick="deleteUser('${user._id}')">Supprimer</button>
-      `;
-  
-      usersContainer.appendChild(card);
-    });
-  }
-  
-  async function deleteUser(id) {
-    if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) return;
-  
-    const res = await fetch(`/admin/users/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      alert("Utilisateur supprimé !");
-      fetchUsers();
-    } else {
-      alert("Erreur lors de la suppression");
+    async function fetchUsers() {
+      try {
+        const res = await fetch("/admin/users");
+        const users = await res.json();
+
+        const usersContainer = document.getElementById("users");
+        usersContainer.innerHTML = "";
+
+        users.forEach(user => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML = `
+            <b>${user.fullName || user.name}</b>
+            <div class="details">${user._id}</div>
+            <div class="details">${user.email}</div>
+            <button onclick="deleteUser('${user._id}')">Supprimer</button>
+          `;
+
+          usersContainer.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Erreur fetchUsers:", err);
+      }
     }
-  }
-  
-  // ================== IMAGES ==================
-  async function fetchImages() {
-    const res = await fetch("/admin/images/all"); // <- route correcte
-    const images = await res.json();
-  
-    const imagesContainer = document.getElementById("images");
-    imagesContainer.innerHTML = "";
-  
-    images.forEach(name => {
-      const card = document.createElement("div");
-      card.className = "card";
-  
-      card.innerHTML = `
-        <img src="/images/profile/${name}" alt="${name}" />
-        <strong style="font-family:'Sitka Small'; padding-right: 10px; font-size: 8px;">${name}</strong>
-        <button onclick="deleteImage('${name}')">Supprimer</button>
-      `;
-  
-      imagesContainer.appendChild(card);
-    });
-  }
-  
-  async function deleteImage(name) {
-    if (!confirm("Voulez-vous vraiment supprimer cette image ?")) return;
-  
-    const res = await fetch(`/admin/images/${name}`, { method: "DELETE" });
-    if (res.ok) {
-      alert("Image supprimée !");
-      fetchImages();
-    } else {
-      alert("Erreur lors de la suppression");
+
+    async function deleteUser(userId) {
+      if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) return;
+
+      try {
+        const res = await fetch(`/admin/users/${userId}`, { method: "DELETE" });
+        if (res.ok) {
+          alert("Utilisateur supprimé !");
+          fetchUsers();
+          fetchImages(); // pour mettre à jour les images si profil supprimé
+        } else {
+          alert("Erreur lors de la suppression");
+        }
+      } catch (err) {
+        console.error("Erreur deleteUser:", err);
+      }
     }
-  }  
-  
-  // ================== INIT ==================
-  fetchUsers();
-  fetchImages();
-  
+
+    // ================== IMAGES ==================
+    async function fetchImages() {
+      try {
+        const res = await fetch("/admin/images/all");
+        const images = await res.json();
+
+        const imagesContainer = document.getElementById("images");
+        imagesContainer.innerHTML = "";
+
+        images.forEach(img => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML = `
+            <img src="${img.url}" alt="${img.name}" />
+            <strong>${img.name}</strong>
+            <button onclick="deleteImage('${img._id}')">Supprimer</button>
+          `;
+
+          imagesContainer.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Erreur fetchImages:", err);
+      }
+    }
+
+    async function deleteImage(userId) {
+      if (!confirm("Voulez-vous vraiment supprimer cette image ?")) return;
+
+      try {
+        const res = await fetch(`/admin/images/${userId}`, { method: "DELETE" });
+        if (res.ok) {
+          alert("Image supprimée !");
+          fetchImages();
+        } else {
+          alert("Erreur lors de la suppression");
+        }
+      } catch (err) {
+        console.error("Erreur deleteImage:", err);
+      }
+    }
+
+    // ================== INIT ==================
+    fetchUsers();
+    fetchImages();
   </script>
 </body>
 </html>
