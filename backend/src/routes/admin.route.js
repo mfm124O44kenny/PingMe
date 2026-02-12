@@ -60,7 +60,7 @@ router.get("/images/all", async (req, res) => {
     // récupérer toutes les images dans le dossier "users" (Cloudinary)
     const result = await cloudinary.api.resources({
       type: "upload",
-      prefix: "users/", // même dossier que lors de l'upload
+      prefix: "profile", // même dossier que lors de l'upload
       max_results: 100, // tu peux ajuster
     });
 
