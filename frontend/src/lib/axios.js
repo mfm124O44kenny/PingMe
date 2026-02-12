@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: `${window.location.protocol}//${window.location.hostname}:5001/api`,
+  baseURL: `https://pingme-backend-uyg3.onrender.com/`,
   withCredentials: true,
 });
 
